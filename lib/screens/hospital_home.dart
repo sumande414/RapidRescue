@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rapid_rescue/widgets/request_card.dart';
 import '../constants/text_styles.dart';
 import '../model/hospital.dart';
 import '../constants/colors.dart';
@@ -33,17 +32,21 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
         (e) {
           print(e);
           setState(() {
-            if (e['status'] == 'open') {
+            if (e['status'] == 'open' &&
+                openRequests
+                    .where((element) => element.email == e['email'])
+                    .isEmpty) {
               openRequests.add(Request.fromDb(e));
-            } else if (e['status'] == 'accepted') {
-              openRequests.remove(Request.fromDb(e));
+            }
+            if (e['status'] == 'accepted') {
+              print("reached");
+              openRequests.removeWhere((item) => item.email == e['email']);
               acceptedRequests.add(Request.fromDb(e));
             }
           });
         },
       ).toList();
     });
-    
 
     super.initState();
   }
@@ -52,17 +55,17 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: PRIMARY_BACKGROUND_COLOR,
-        body: Column(children: [
-          Container(
-              height: 380,
-              width: double.infinity,
-              color: Colors.white.withOpacity(.1),
-              child: FutureBuilder(
-                  future: hsptl,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      var hospital = snapshot.data!;
-                      return Column(
+        body: FutureBuilder(
+            future: hsptl,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var hospital = snapshot.data!;
+                return Column(children: [
+                  Container(
+                      height: 380,
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(.1),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Center(
@@ -84,63 +87,91 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                               },
                               icon: Icon(Icons.logout))
                         ],
-                      );
-                    } else {
-                      return const Center(
-                        child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator()),
-                      );
-                    }
-                  })),
-          Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                  height: 400,
-                  decoration: BoxDecoration(
-                      color: PRIMARY_CARD_BACKGROUND_COLOR,
-                      borderRadius: BorderRadius.circular(30)),
-                  width: double.infinity,
-                  child: Column(children: [
-                    Text("Incoming Requests",
-                        style: TextStyle(color: Colors.green)),
-                    Container(
-                        width: double.infinity,
-                        height: 200,
-                        child: ListView.builder(
-                            itemCount: openRequests.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-      padding: const EdgeInsets.fromLTRB(8,1,8,1),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Row(children: [
-            SizedBox(
-              width: 220,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Text("Name: ${openRequests[index].name}"),
-                Text("Email: ${openRequests[index].email}"),
-                Text("Phone: ${openRequests[index].phone}"),
-              ],),
-            ),
-            Spacer(),
-            IconButton(onPressed: (){
-              FirebaseFirestore.instance.collection('requests').doc(openRequests[index].email).update({'status':'accepted'});
-              setState(() {
-                openRequests.removeAt(index);
-              });
-            }, icon: Icon(Icons.check)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.map))
-          ],),
-        )
-      ),
-    );
-                            }))
-                  ])))
-        ]));
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                          height: 400,
+                          decoration: BoxDecoration(
+                              color: PRIMARY_CARD_BACKGROUND_COLOR,
+                              borderRadius: BorderRadius.circular(30)),
+                          width: double.infinity,
+                          child: Column(children: [
+                            Text("Incoming Requests",
+                                style: TextStyle(color: Colors.green)),
+                            Container(
+                                width: double.infinity,
+                                height: 200,
+                                child: ListView.builder(
+                                    itemCount: openRequests.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 1, 8, 1),
+                                          child: Card(
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: Row(children: [
+                                                    SizedBox(
+                                                      width: 220,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              "Name: ${openRequests[index].name}"),
+                                                          Text(
+                                                              "Email: ${openRequests[index].email}"),
+                                                          Text(
+                                                              "Phone: ${openRequests[index].phone}"),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'requests')
+                                                              .doc(openRequests[
+                                                                      index]
+                                                                  .email)
+                                                              .update({
+                                                            'status':
+                                                                'accepted',
+                                                            'hospitalName':
+                                                                hospital.name,
+                                                            'hospitalEmail':
+                                                                hospital.email,
+                                                            'hospitalPhone':
+                                                                hospital.phone
+                                                          });
+                                                          setState(() {
+                                                            openRequests
+                                                                .removeAt(
+                                                                    index);
+                                                          });
+                                                        },
+                                                        icon:
+                                                            Icon(Icons.check)),
+                                                    IconButton(
+                                                        onPressed: () {},
+                                                        icon: Icon(Icons.map))
+                                                  ]))));
+                                    }))
+                          ])))
+                ]);
+              } else {
+                return const Center(
+                  child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator()),
+                );
+              }
+            }));
   }
 }

@@ -71,7 +71,10 @@ addRequest(
     required String phone,
     required Position userCoordinates,
     required String datetime,
-    required String status
+    required String status,
+    required String hospitalName,
+    required String hospitalEmail,
+    required String hospitalPhone,
     }
     ) async {
   try {
@@ -86,6 +89,9 @@ addRequest(
       'lattitude' : userCoordinates.latitude,
       'longitude' : userCoordinates.longitude,
       'status' : status,
+      'hospitalName' : hospitalName,
+      'hospitalEmail' : hospitalEmail,
+      'hospitalPhone' : hospitalPhone,
     });
   } catch (e) {
     Fluttertoast.showToast(msg: "Firestore Error: ${e.toString()}");

@@ -130,7 +130,10 @@ class _UserHomePageState extends State<UserHomePage> {
                             phone: user.phone,
                             userCoordinates: _currentPosition!,
                             datetime: DateTime.now().toString(),
-                            status: "open");
+                            status: "open",
+                            hospitalName: "null",
+                            hospitalEmail: "null",
+                            hospitalPhone: "null",);
                       } else {
                         showDialog(
                             context: context,
@@ -176,7 +179,10 @@ class _UserHomePageState extends State<UserHomePage> {
                                   Text("Email: ${request!.email}"),
                                   Text("Phone: ${request!.phone}"),
                                   Text("${request!.status.toUpperCase()}",
-                                      style: TextStyle(fontSize: 30))
+                                      style: TextStyle(fontSize: 30)),
+                                  Text("Name: ${request!.hospitalName}"),
+                                  Text("Email: ${request!.hospitalEmail}"),
+                                  Text("Phone: ${request!.hospitalPhone}"),
                                 ],
                               ):Center(child: Text("No data found"),),
                             ))
