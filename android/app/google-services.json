@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340745239064",
+    "project_id": "rapid-rescue-2026",
+    "storage_bucket": "rapid-rescue-2026.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340745239064:android:d4736d48671b5b7a21a16d",
+        "android_client_info": {
+          "package_name": "com.spyder.rapidrescue"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGJi91V4M9xcTySuFWCKw3hSu6S-5zOpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
