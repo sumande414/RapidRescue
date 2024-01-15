@@ -48,7 +48,7 @@ class _AcceptedRequestScreenState extends State<AcceptedRequestScreen> {
       body: ListView.builder(
         itemCount: widget.acceptedRequests.length,
         itemBuilder: (context,index){
-          return RequestCard(name: widget.acceptedRequests[index].name, email: widget.acceptedRequests[index].email, phone: widget.acceptedRequests[index].phone);
+          return RequestCard(name: widget.acceptedRequests[index].name, email: widget.acceptedRequests[index].email, phone: widget.acceptedRequests[index].phone,datetime: widget.acceptedRequests[index].datetime);
       })
     );
   }

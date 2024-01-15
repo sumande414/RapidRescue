@@ -46,7 +46,7 @@ class _ExpiredRequestScreenState extends State<ExpiredRequestScreen> {
       body: ListView.builder(
         itemCount: widget.expiredRequests.length,
         itemBuilder: (context,index){
-          return RequestCard(name: widget.expiredRequests[index].name, email: widget.expiredRequests[index].email, phone: widget.expiredRequests[index].phone,isExpiredScreen: true,);
+          return RequestCard(name: widget.expiredRequests[index].name, email: widget.expiredRequests[index].email, phone: widget.expiredRequests[index].phone,datetime: widget.expiredRequests[index].datetime,isExpiredScreen: true,);
       })
     );
   }

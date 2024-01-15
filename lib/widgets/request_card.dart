@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class RequestCard extends StatelessWidget {
-   const RequestCard({super.key, required this.name, required this.email, required this.phone, this.isExpiredScreen});
+   const RequestCard({super.key, required this.name, required this.email, required this.phone,required this.datetime, this.isExpiredScreen});
   final String name;
   final bool? isExpiredScreen;
   final String email;
   final String phone;
+  final String datetime;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,6 +21,7 @@ class RequestCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                Text(datetime.substring(0,datetime.lastIndexOf('.')),style:TextStyle(color:Colors.red[900])),
                 Text("Name: $name"),
                 Text("Email: $email"),
                 Text("Phone: $phone"),

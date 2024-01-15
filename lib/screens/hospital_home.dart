@@ -136,6 +136,8 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
+                                                            Text(openRequests[index].datetime.substring(0,openRequests[index].datetime.lastIndexOf('.')),style:TextStyle(color:Colors.red[900])),
+
                                                             Text(
                                                                 "Name: ${openRequests[index].name}"),
                                                             Text(
