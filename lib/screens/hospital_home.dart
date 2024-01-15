@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rapid_rescue/screens/accepted_request_screen.dart';
+import 'package:rapid_rescue/screens/expired_request_screen.dart';
 import '../constants/text_styles.dart';
 import '../model/hospital.dart';
 import '../constants/colors.dart';
@@ -17,6 +19,8 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
   Future<Hospital>? hsptl;
   List<Request> openRequests = [];
   List<Request> acceptedRequests = [];
+  List<Request> expiredRequests = [];
+
   @override
   void initState() {
     hsptl = FirebaseFirestore.instance
@@ -28,32 +32,45 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
         .collection('requests')
         .snapshots()
         .listen((event) {
+          openRequests=[];
+          acceptedRequests=[];
+          expiredRequests=[];
       event.docs.map(
         (e) {
-          print(e);
-          setState(() {
-            if (e['status'] == 'open' &&
-                openRequests
-                    .where((element) => element.email == e['email'])
-                    .isEmpty) {
-              openRequests.add(Request.fromDb(e));
-            }
-            if (e['status'] == 'accepted') {
-              print("reached");
-              openRequests.removeWhere((item) => item.email == e['email']);
-              acceptedRequests.add(Request.fromDb(e));
-            }
+          setState((){
+            if(e['status']=='open'){
+            openRequests.add(Request.fromDb(e));
+          }
+          else if(e['status']=='accepted'){
+            openRequests.removeWhere((element) => element.email == e['email']);
+            if(e['hospitalEmail']==FirebaseAuth.instance.currentUser!.email)
+            {
+            acceptedRequests.add(Request.fromDb(e));
+          } else{
+            expiredRequests.add(Request.fromDb(e));
+          }
+          }else if(e['status']=='completed'){
+            acceptedRequests.removeWhere((element) => element.email == e['email']);
+          }
           });
+          
         },
       ).toList();
+      
     });
 
     super.initState();
   }
-
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(leading: DrawerButton(),
+      title: Center(child: Text("Rapid Rescue",style:CARD_HEAD)),
+      backgroundColor: Colors.transparent,
+      actions:[IconButton(onPressed: (){FirebaseAuth.instance.signOut();}, icon: Icon(Icons.logout))],
+      iconTheme: const IconThemeData(color:Colors.white),),
         backgroundColor: PRIMARY_BACKGROUND_COLOR,
         body: FutureBuilder(
             future: hsptl,
@@ -81,11 +98,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                               style: HOSPITAL_HEADING),
                           Text(hospital.email, style: HOSPITAL_SUB_HEADING),
                           Text(hospital.phone, style: HOSPITAL_SUB_HEADING),
-                          IconButton(
-                              onPressed: () {
-                                FirebaseAuth.instance.signOut();
-                              },
-                              icon: Icon(Icons.logout))
+                          
                         ],
                       )),
                   Padding(
@@ -96,73 +109,103 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                               color: PRIMARY_CARD_BACKGROUND_COLOR,
                               borderRadius: BorderRadius.circular(30)),
                           width: double.infinity,
-                          child: Column(children: [
-                            Text("Incoming Requests",
-                                style: TextStyle(color: Colors.green)),
-                            Container(
-                                width: double.infinity,
-                                height: 200,
-                                child: ListView.builder(
-                                    itemCount: openRequests.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 1, 8, 1),
-                                          child: Card(
-                                              child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Row(children: [
-                                                    SizedBox(
-                                                      width: 220,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              "Name: ${openRequests[index].name}"),
-                                                          Text(
-                                                              "Email: ${openRequests[index].email}"),
-                                                          Text(
-                                                              "Phone: ${openRequests[index].phone}"),
-                                                        ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(children: [
+                              const Text("Incoming Requests",
+                                  style: TextStyle(color: Colors.green)),
+                              SizedBox(
+                                  width: double.infinity,
+                                  height: 300,
+                                  child: ListView.builder(
+                                      itemCount: openRequests.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                8, 1, 8, 1),
+                                            child: Card(
+                                                child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Row(children: [
+                                                      SizedBox(
+                                                        width: 220,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                                "Name: ${openRequests[index].name}"),
+                                                            Text(
+                                                                "Email: ${openRequests[index].email}"),
+                                                            Text(
+                                                                "Phone: ${openRequests[index].phone}"),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Spacer(),
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'requests')
-                                                              .doc(openRequests[
-                                                                      index]
-                                                                  .email)
-                                                              .update({
-                                                            'status':
-                                                                'accepted',
-                                                            'hospitalName':
-                                                                hospital.name,
-                                                            'hospitalEmail':
-                                                                hospital.email,
-                                                            'hospitalPhone':
-                                                                hospital.phone
-                                                          });
-                                                          setState(() {
-                                                            openRequests
-                                                                .removeAt(
-                                                                    index);
-                                                          });
-                                                        },
-                                                        icon:
-                                                            Icon(Icons.check)),
-                                                    IconButton(
-                                                        onPressed: () {},
-                                                        icon: Icon(Icons.map))
-                                                  ]))));
-                                    }))
-                          ])))
+                                                      const Spacer(),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'requests')
+                                                                .doc(openRequests[
+                                                                        index]
+                                                                    .email)
+                                                                .update({
+                                                              'status':
+                                                                  'accepted',
+                                                              'hospitalName':
+                                                                  hospital.name,
+                                                              'hospitalEmail':
+                                                                  hospital
+                                                                      .email,
+                                                              'hospitalPhone':
+                                                                  hospital.phone
+                                                            });
+                                                            setState(() {
+                                                              openRequests
+                                                                  .removeAt(
+                                                                      index);
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.check)),
+                                                      IconButton(
+                                                          onPressed: () {},
+                                                          icon: const Icon(
+                                                              Icons.map))
+                                                    ]))));
+                                      })),
+                              const Spacer(),
+                              Row(
+                                children: [
+                                  const Spacer(),
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> AcceptedRequestScreen(acceptedRequests:  acceptedRequests)));
+                                      },
+                                      icon: const Icon(Icons
+                                          .playlist_add_check_circle_rounded),
+                                      label: const Text("Accepted")),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpiredRequestScreen(expiredRequests:  expiredRequests)));
+
+                                      },
+                                      icon: const Icon(Icons
+                                          .playlist_add_check_circle_rounded),
+                                      label: const Text("Expired")),
+                                ],
+                              )
+                            ]),
+                          )))
                 ]);
               } else {
                 return const Center(

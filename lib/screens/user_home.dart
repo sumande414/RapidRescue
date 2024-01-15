@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rapid_rescue/functions/database_functions.dart';
 
@@ -69,7 +70,6 @@ class _UserHomePageState extends State<UserHomePage> {
         .doc(FirebaseAuth.instance.currentUser!.email)
         .get()
         .then((value) => AppUser.fromDb(value));
-    // request = FirebaseFirestore.instance.collection('requests').doc(FirebaseAuth.instance.currentUser!.email).get().then((value) => Request.fromDb(value));
     FirebaseFirestore.instance
         .collection('requests')
         .doc(FirebaseAuth.instance.currentUser!.email)
@@ -86,15 +86,23 @@ class _UserHomePageState extends State<UserHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(leading: DrawerButton(),
+      title: Center(child: Text("Rapid Rescue",style:CARD_HEAD)),
+      backgroundColor: Colors.transparent,
+      actions:[IconButton(onPressed: (){FirebaseAuth.instance.signOut();}, icon: const Icon(Icons.logout))],
+      iconTheme: const IconThemeData(color:Colors.white),),
         backgroundColor: PRIMARY_BACKGROUND_COLOR,
         body: FutureBuilder(
             future: user,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var user = snapshot.data!;
-                return Column(children: [
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                   Container(
-                      height: 370,
+                      height: 320,
                       width: double.infinity,
                       color: Colors.white.withOpacity(.1),
                       child: Column(
@@ -108,19 +116,17 @@ class _UserHomePageState extends State<UserHomePage> {
                                   style: AVATAR),
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 15),
                           Text(user.name.toUpperCase(),
                               style: HOSPITAL_HEADING),
                           Text(user.email, style: HOSPITAL_SUB_HEADING),
                           Text(user.phone, style: HOSPITAL_SUB_HEADING),
-                          IconButton(onPressed: (){
-                            FirebaseAuth.instance.signOut();
-                          }, icon: Icon(Icons.logout))
+                          
                         ],
                       )),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   GestureDetector(
-                    onTap: () {
+                    onTap: (request==null || request!.status=='completed')? () {
                       _getCurrentPosition();
                       print(_currentPosition);
                       if (_currentPosition != null) {
@@ -135,31 +141,22 @@ class _UserHomePageState extends State<UserHomePage> {
                             hospitalEmail: "null",
                             hospitalPhone: "null",);
                       } else {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const AlertDialog(
-                                title: Text("Fetching Location..."),
-                                actions: [
-                                  Center(child: CircularProgressIndicator())
-                                ],
-                              );
-                            });
+                        Fluttertoast.showToast(msg: "Fetching Location... Please wait...");
                       }
-                    },
+                    }:null,
                     child: Container(
                       height: 70,
                       width: 350,
                       decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: (request==null || request!.status=='completed')? Colors.green:Colors.grey,
                           borderRadius: BorderRadius.circular(20)),
                       child: Center(
                           child: Text("REQUEST AMBULANCE", style: CARD_BUTTON)),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
-                      height: 350,
+                      height: 295,
                       width: 300,
                       decoration: BoxDecoration(
                           color: PRIMARY_CARD_BACKGROUND_COLOR,
@@ -179,12 +176,12 @@ class _UserHomePageState extends State<UserHomePage> {
                                   Text("Email: ${request!.email}"),
                                   Text("Phone: ${request!.phone}"),
                                   Text("${request!.status.toUpperCase()}",
-                                      style: TextStyle(fontSize: 30)),
+                                      style: const TextStyle(fontSize: 30)),
                                   Text("Name: ${request!.hospitalName}"),
                                   Text("Email: ${request!.hospitalEmail}"),
                                   Text("Phone: ${request!.hospitalPhone}"),
                                 ],
-                              ):Center(child: Text("No data found"),),
+                              ):const Center(child: Text("No data found"),),
                             ))
                           ])))
                 ]);

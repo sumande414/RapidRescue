@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import '../functions/database_functions.dart';
 import '../constants/colors.dart';
@@ -87,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: PRIMARY_BACKGROUND_COLOR,
       body: Center(
           child: SizedBox(
-        width: 300,
+        width: 350,
         height: 600,
         child: Card(
             color: PRIMARY_CARD_BACKGROUND_COLOR,
@@ -112,6 +113,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                       (isHospital) ? "Hospital Name" : "Name",
                                   controller: _name,
                                   hintTextStyle: CARD_FORM_BODY,
+                                  validator:(value) {
+                                    if(value == null || value.isEmpty){
+                                      return "Name cannot be empty";
+                                    }
+                                  },
                                 ),
                           const SizedBox(height: 15),
                           login
@@ -120,12 +126,22 @@ class _SignupScreenState extends State<SignupScreen> {
                                   hintText: "Phone Number",
                                   controller: _phone,
                                   hintTextStyle: CARD_FORM_BODY,
+                                  validator:(value) {
+                                    if(value == null || value.isEmpty|| value.length!=10 || double.tryParse(value)==null){
+                                      return "Enter a 10 digit phone number";
+                                    }
+                                  }
                                 ),
                           const SizedBox(height: 15),
                           FormContainerWidget(
                             hintText: "Email",
                             controller: _email,
                             hintTextStyle: CARD_FORM_BODY,
+                            validator:(value) {
+                                    if(value == null || value.isEmpty|| !value.contains('@') || !value.contains('.')){
+                                      return "Enter a proper email id";
+                                    }
+                            }
                           ),
                           const SizedBox(height: 15),
                           FormContainerWidget(
@@ -133,6 +149,10 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintTextStyle: CARD_FORM_BODY,
                             controller: _password,
                             isPasswordField: true,
+                            validator:(value) {
+                                    if(value == null || value.isEmpty|| value.length<6){
+                                      return "Password should be more than 6 characters";
+                                    }}
                           ),
                           const SizedBox(height: 15),
                           login
@@ -142,6 +162,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                   hintTextStyle: CARD_FORM_BODY,
                                   controller: _rtpPassword,
                                   isPasswordField: true,
+                                  validator:(value) {
+                                    if(value == null || value.isEmpty|| value!=_password.text){
+                                      return "Field has a different value";
+                                    }}
                                 ),
                                 const SizedBox(height: 10,),
                           !login && isHospital
@@ -149,6 +173,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
+                                        Fluttertoast.showToast(msg:"Fetching GPS Signal...");
                                         _getCurrentPosition();
                                       },
                                       child: Container(
@@ -176,29 +201,29 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 10,
                           ),
                           GestureDetector(
-                            onTap: () {
+                            onTap: (isHospital&&_currentPosition==null)?(){Fluttertoast.showToast(msg: "Click on fetch location and wait for the a succesful fetch");}:() {
                               if (_formKey.currentState!.validate()) {
                                 if (login) {
                                   signin(
-                                      email: _email.text,
+                                      email: _email.text.trim(),
                                       password: _password.text);
                                 } else {
                                   signup(
-                                      email: _email.text,
+                                      email: _email.text.trim(),
                                       password: _password.text);
                                   if (isHospital) {
                                     addHospital(
-                                        email: _email.text,
+                                        email: _email.text.trim(),
                                         name: _name.text,
                                         phone: _phone.text,
                                         hospitalCoordinates: _currentPosition!);
                                         addAll(email: _email.text, type: "hospital");
                                   } else {
                                     addUser(
-                                        email: _email.text,
+                                        email: _email.text.trim(),
                                         name: _name.text,
                                         phone: _phone.text);
-                                    addAll(email: _email.text, type: "user");
+                                    addAll(email: _email.text.trim(), type: "user");
                                   }
                                 }
                               }
@@ -207,7 +232,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               height: 40,
                               width: 350,
                               decoration: BoxDecoration(
-                                  color: PRIMARY_BACKGROUND_COLOR,
+                                  color: (isHospital&& _currentPosition==null)?Colors.grey:PRIMARY_BACKGROUND_COLOR,
                                   borderRadius: BorderRadius.circular(30)),
                               child: Center(
                                   child: Text(
