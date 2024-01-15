@@ -79,7 +79,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                 var hospital = snapshot.data!;
                 return Column(children: [
                   Container(
-                      height: 380,
+                      height: 320,
                       width: double.infinity,
                       color: Colors.white.withOpacity(.1),
                       child: Column(
@@ -93,7 +93,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                                   style: AVATAR),
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 15),
                           Text(hospital.name.toUpperCase(),
                               style: HOSPITAL_HEADING),
                           Text(hospital.email, style: HOSPITAL_SUB_HEADING),
@@ -104,7 +104,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                   Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Container(
-                          height: 400,
+                          height: 380,
                           decoration: BoxDecoration(
                               color: PRIMARY_CARD_BACKGROUND_COLOR,
                               borderRadius: BorderRadius.circular(30)),
@@ -116,7 +116,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                                   style: TextStyle(color: Colors.green)),
                               SizedBox(
                                   width: double.infinity,
-                                  height: 300,
+                                  height: 290,
                                   child: ListView.builder(
                                       itemCount: openRequests.length,
                                       itemBuilder: (context, index) {
@@ -180,7 +180,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                                                               Icons.map))
                                                     ]))));
                                       })),
-                              const Spacer(),
+                              //const Spacer(),
                               Row(
                                 children: [
                                   const Spacer(),
@@ -196,7 +196,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                                   ),
                                   ElevatedButton.icon(
                                       onPressed: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpiredRequestScreen(expiredRequests:  expiredRequests)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ExpiredRequestScreen(expiredRequests:  expiredRequests,)));
 
                                       },
                                       icon: const Icon(Icons

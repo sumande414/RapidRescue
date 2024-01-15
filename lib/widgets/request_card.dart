@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class RequestCard extends StatelessWidget {
-  const RequestCard({super.key, required this.name, required this.email, required this.phone});
+   const RequestCard({super.key, required this.name, required this.email, required this.phone, this.isExpiredScreen});
   final String name;
+  final bool? isExpiredScreen;
   final String email;
   final String phone;
   @override
@@ -25,10 +26,10 @@ class RequestCard extends StatelessWidget {
               ],),
             ),
             const Spacer(),
-            IconButton(onPressed: (){
+            (isExpiredScreen==true)?Container():IconButton(onPressed: (){
               FirebaseFirestore.instance.collection('requests').doc(email).update({'status':'completed'});
             }, icon: const Icon(Icons.check)),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.map))
+            (isExpiredScreen==true)?Container():IconButton(onPressed: (){}, icon: const Icon(Icons.map))
           ],),
         )
       ),
