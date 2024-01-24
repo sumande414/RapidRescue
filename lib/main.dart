@@ -23,7 +23,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
+      theme: ThemeData(navigationBarTheme: NavigationBarThemeData(
+        iconTheme: MaterialStateProperty.all(IconThemeData(color: Colors.white)),
+                labelTextStyle:
+                    MaterialStateProperty.all(TextStyle(color: Colors.white))),
         useMaterial3: true
       ),
       debugShowCheckedModeBanner: false,
