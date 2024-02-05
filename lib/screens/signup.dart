@@ -137,6 +137,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           FormContainerWidget(
                             hintText: "Email",
                             controller: _email,
+                            autofillHints: [AutofillHints.email],
                             hintTextStyle: CARD_FORM_BODY,
                             validator:(value) {
                                     if(value == null || value.isEmpty|| !value.contains('@') || !value.contains('.')){
@@ -148,6 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           FormContainerWidget(
                             hintText: "Password",
                             hintTextStyle: CARD_FORM_BODY,
+                            autofillHints: [AutofillHints.password],
                             controller: _password,
                             isPasswordField: true,
                             validator:(value) {

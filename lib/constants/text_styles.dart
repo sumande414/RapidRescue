@@ -32,7 +32,7 @@ TextStyle AVATAR = const TextStyle(
 
 TextStyle HOSPITAL_HEADING = const TextStyle(
   color: Colors.white,
-  fontSize: 35,
+  fontSize: 25,
   fontWeight: FontWeight.w400
 );
 
@@ -40,4 +40,10 @@ TextStyle HOSPITAL_SUB_HEADING = const TextStyle(
   color: Colors.white,
   fontSize: 20,
   fontWeight: FontWeight.w200
+);
+
+TextStyle BOTTON_TEXT_STYLE = const TextStyle(
+  color: Colors.white,
+  fontSize: 20,
+  fontWeight: FontWeight.bold
 );

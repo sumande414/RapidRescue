@@ -22,7 +22,6 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
   List<Request> acceptedRequests = [];
   List<Request> expiredRequests = [];
 
-
   @override
   void initState() {
     FirebaseFirestore.instance
@@ -34,10 +33,16 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
       expiredRequests = [];
       event.docs.map(
         (e) {
-           // print(Geolocator.distanceBetween(widget.hospital.latitude, widget.hospital.longitude, e['lattitude'], e['longitude']));
+          // print(Geolocator.distanceBetween(widget.hospital.latitude, widget.hospital.longitude, e['lattitude'], e['longitude']));
 
           setState(() {
-            if (e['status'] == 'open' && Geolocator.distanceBetween(widget.hospital.latitude, widget.hospital.longitude, e['lattitude'], e['longitude'])<=5000) {
+            if (e['status'] == 'open' &&
+                Geolocator.distanceBetween(
+                        widget.hospital.latitude,
+                        widget.hospital.longitude,
+                        e['lattitude'],
+                        e['longitude']) <=
+                    5000) {
               openRequests.add(Request.fromDb(e));
             } else if (e['status'] == 'accepted') {
               openRequests
@@ -48,7 +53,13 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
               } else {
                 expiredRequests.add(Request.fromDb(e));
               }
-            } else if (e['status'] == 'completed'&&Geolocator.distanceBetween(widget.hospital.latitude, widget.hospital.longitude, e['lattitude'], e['longitude'])<=5000) {
+            } else if (e['status'] == 'completed' &&
+                Geolocator.distanceBetween(
+                        widget.hospital.latitude,
+                        widget.hospital.longitude,
+                        e['lattitude'],
+                        e['longitude']) <=
+                    5000) {
               acceptedRequests
                   .removeWhere((element) => element.email == e['email']);
             }
@@ -94,46 +105,88 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
           title: Center(child: Text("Rapid Rescue", style: CARD_HEAD)),
           backgroundColor: Colors.transparent,
           actions: [
-            IconButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                icon: Icon(Icons.logout))
+            PopupMenuButton(
+                icon: CircleAvatar(
+                  backgroundColor: PRIMARY_CARD_BACKGROUND_COLOR,
+                  child: Text(widget.hospital.name[0],
+                      style: TextStyle(color: Colors.white)),
+                ),
+                color: PRIMARY_CARD_BACKGROUND_COLOR,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      enabled: false,
+                      child: Center(
+                        child: CircleAvatar(
+                          backgroundColor: PRIMARY_BACKGROUND_COLOR,
+                          radius: 90,
+                          child: Text(
+                            widget.hospital.name[0].toUpperCase(),
+                            style: AVATAR,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      enabled: false,
+                      child: Center(
+                        child: Text(
+                          widget.hospital.name.toUpperCase(),
+                          style: HOSPITAL_HEADING,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      enabled: false,
+                      child: Center(
+                        child: Text(
+                          widget.hospital.email,
+                          style: HOSPITAL_SUB_HEADING,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      enabled: false,
+                      child: Center(
+                        child: Text(
+                          widget.hospital.phone,
+                          style: HOSPITAL_SUB_HEADING,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                        onTap: () {
+                          FirebaseAuth.instance.signOut();
+                        },
+                        enabled: true,
+                        child: Center(
+                          child: Container(
+                            //  height: 50,
+                            //  width: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red,
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("LOGOUT", style: BOTTON_TEXT_STYLE),
+                              ),
+                            ),
+                          ),
+                        ))
+                  ];
+                }),
           ],
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         backgroundColor: PRIMARY_BACKGROUND_COLOR,
         body: [
           Column(children: [
-            Expanded(
-              flex: 4,
-              child: Container(
-                  // height: 320,
-                  width: double.infinity,
-                  color: Colors.white.withOpacity(.1),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: CircleAvatar(
-                            backgroundColor: PRIMARY_BACKGROUND_COLOR,
-                            radius: 90,
-                            child: Text(widget.hospital.name[0].toUpperCase(),
-                                style: AVATAR),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Text(widget.hospital.name.toUpperCase(),
-                            style: HOSPITAL_HEADING),
-                        Text(widget.hospital.email,
-                            style: HOSPITAL_SUB_HEADING),
-                        Text(widget.hospital.phone,
-                            style: HOSPITAL_SUB_HEADING),
-                      ],
-                    ),
-                  )),
-            ),
             Expanded(
               flex: 5,
               child: Padding(
