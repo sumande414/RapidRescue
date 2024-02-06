@@ -22,32 +22,56 @@ class _ExpiredRequestScreenState extends State<ExpiredRequestScreen> {
         .listen((event) {
       event.docs.map(
         (e) {
-          setState((){
-            if(e['status']=='completed'){
-            widget.expiredRequests.removeWhere((element) => element.email == e['email']);
-          }
+          setState(() {
+            if (e['status'] == 'completed') {
+              widget.expiredRequests
+                  .removeWhere((element) => element.email == e['email']);
+            }
           });
-          
         },
       ).toList();
-      
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PRIMARY_BACKGROUND_COLOR,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text("Expired Requests", style: CARD_HEAD,),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: ListView.builder(
-        itemCount: widget.expiredRequests.length,
-        itemBuilder: (context,index){
-          return RequestCard(name: widget.expiredRequests[index].name, email: widget.expiredRequests[index].email, phone: widget.expiredRequests[index].phone,datetime: widget.expiredRequests[index].datetime,isExpiredScreen: true,);
-      })
-    );
+    return Column(children: [
+      Expanded(
+          flex: 5,
+          child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                  // height: 380,
+                  decoration: BoxDecoration(
+                      color: PRIMARY_CARD_BACKGROUND_COLOR,
+                      borderRadius: BorderRadius.circular(30)),
+                  width: double.infinity,
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(children: [
+                         Text("Expired Requests",
+                            style: REQUEST_TEXT_STYLE),
+                        Expanded(
+                            // width: double.infinity,
+                            // height: 290,
+                            child: ListView.builder(
+                                itemCount: widget.expiredRequests.length,
+                                itemBuilder: (context, index) {
+                                  return RequestCard(
+                                    name: widget.expiredRequests[index].name,
+                                    email: widget.expiredRequests[index].email,
+                                    phone: widget.expiredRequests[index].phone,
+                                    datetime:
+                                        widget.expiredRequests[index].datetime,
+                                    isExpiredScreen: true,
+                                    lat: widget
+                                          .expiredRequests[index].lat,
+                                    lng:widget
+                                          .expiredRequests[index].lng
+                                  );
+                                }))
+                      ])))))
+    ]);
   }
 }

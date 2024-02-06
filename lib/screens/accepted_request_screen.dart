@@ -8,14 +8,12 @@ import '../model/request.dart';
 
 class AcceptedRequestScreen extends StatefulWidget {
   AcceptedRequestScreen({super.key, required this.acceptedRequests});
-    List<Request> acceptedRequests;
+  List<Request> acceptedRequests;
   @override
   State<AcceptedRequestScreen> createState() => _AcceptedRequestScreenState();
 }
 
 class _AcceptedRequestScreenState extends State<AcceptedRequestScreen> {
-
-
   @override
   void initState() {
     FirebaseFirestore.instance
@@ -24,32 +22,57 @@ class _AcceptedRequestScreenState extends State<AcceptedRequestScreen> {
         .listen((event) {
       event.docs.map(
         (e) {
-          setState((){
-            if(e['status']=='completed'){
-            widget.acceptedRequests.removeWhere((element) => element.email == e['email']);
-          }
+          setState(() {
+            if (e['status'] == 'completed') {
+              widget.acceptedRequests
+                  .removeWhere((element) => element.email == e['email']);
+            }
           });
-          
         },
       ).toList();
-      
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PRIMARY_BACKGROUND_COLOR,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text("Accepted Requests", style: CARD_HEAD,),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: ListView.builder(
-        itemCount: widget.acceptedRequests.length,
-        itemBuilder: (context,index){
-          return RequestCard(name: widget.acceptedRequests[index].name, email: widget.acceptedRequests[index].email, phone: widget.acceptedRequests[index].phone,datetime: widget.acceptedRequests[index].datetime);
-      })
-    );
+    return Column(children: [
+      Expanded(
+          flex: 5,
+          child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                  // height: 380,
+                  decoration: BoxDecoration(
+                      color: PRIMARY_CARD_BACKGROUND_COLOR,
+                      borderRadius: BorderRadius.circular(30)),
+                  width: double.infinity,
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(children: [
+                         Text("Accepted Requests",
+                            
+                            style: REQUEST_TEXT_STYLE),
+                        Expanded(
+                            // width: double.infinity,
+                            // height: 290,
+                            child: ListView.builder(
+                                itemCount: widget.acceptedRequests.length,
+                                itemBuilder: (context, index) {
+                                  return RequestCard(
+                                      name: widget.acceptedRequests[index].name,
+                                      email:
+                                          widget.acceptedRequests[index].email,
+                                      phone:
+                                          widget.acceptedRequests[index].phone,
+                                      datetime: widget
+                                          .acceptedRequests[index].datetime,
+                                          lat: widget
+                                          .acceptedRequests[index].lat,
+                                          lng: widget
+                                          .acceptedRequests[index].lng,);
+                                }))
+                      ])))))
+    ]);
   }
 }

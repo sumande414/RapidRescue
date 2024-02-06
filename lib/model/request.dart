@@ -9,6 +9,8 @@ class Request {
   String hospitalName;
   String hospitalEmail;
   String hospitalPhone;
+  double lat;
+  double lng;
   Request(
       {required this.email,
       required this.name,
@@ -17,7 +19,9 @@ class Request {
       required this.status,
       required this.hospitalName,
       required this.hospitalEmail,
-      required this.hospitalPhone,});
+      required this.hospitalPhone,
+      required this.lat,
+      required this.lng});
 
   factory Request.fromDb(DocumentSnapshot<Map<String, dynamic>> data) =>
       Request(
@@ -28,5 +32,7 @@ class Request {
           status: data['status'],
           hospitalName:data['hospitalName'],
           hospitalEmail:data['hospitalEmail'],
-          hospitalPhone:data['hospitalPhone']);
+          hospitalPhone:data['hospitalPhone'],
+          lat: data['lattitude'],
+          lng: data['longitude']);
 }

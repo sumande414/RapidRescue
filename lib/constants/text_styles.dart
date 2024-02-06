@@ -47,3 +47,9 @@ TextStyle BOTTON_TEXT_STYLE = const TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.bold
 );
+
+TextStyle REQUEST_TEXT_STYLE = const TextStyle(
+  color: Colors.green,
+  fontSize: 18,
+  fontWeight: FontWeight.bold
+);

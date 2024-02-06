@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rapid_rescue/constants/colors.dart';
 import 'package:rapid_rescue/model/hospital.dart';
 import 'package:rapid_rescue/screens/hospital_home.dart';
 import 'package:rapid_rescue/screens/user_home.dart';
@@ -57,7 +58,7 @@ class _PostLoginScreenState extends State<PostLoginScreen> {
             if (snapshot.hasData) {
               return HospitalHomePage(hospital: snapshot.data!);
             } else {
-              return Scaffold(body: Center(child: CircularProgressIndicator()));
+              return Scaffold(backgroundColor: PRIMARY_BACKGROUND_COLOR,body: Center(child: CircularProgressIndicator()));
             }
           });
     } else if (type == "user") {
@@ -67,12 +68,13 @@ class _PostLoginScreenState extends State<PostLoginScreen> {
             if (snapshot.hasData) {
               return UserHomePage(user: snapshot.data!);
             } else {
-              return Scaffold(body: Center(child: CircularProgressIndicator()));
+              return Scaffold(backgroundColor: PRIMARY_BACKGROUND_COLOR,body: Center(child: CircularProgressIndicator()));
             }
           });
     } else {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: PRIMARY_BACKGROUND_COLOR,
+        body:const Center(child: CircularProgressIndicator()),
       );
     }
   }

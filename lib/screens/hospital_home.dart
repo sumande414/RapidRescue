@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rapid_rescue/screens/accepted_request_screen.dart';
 import 'package:rapid_rescue/screens/expired_request_screen.dart';
+import 'package:rapid_rescue/screens/incoming_request_screen.dart';
 import '../constants/text_styles.dart';
 import '../model/hospital.dart';
 import '../constants/colors.dart';
@@ -88,17 +89,17 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
               NavigationDestination(
                   icon: Icon(Icons.downloading_rounded,
                       color: (pageIndex == 0) ? Colors.black : null),
-                  label: "Incomming Requests"),
+                  label: "Incomming"),
               NavigationDestination(
                   icon: Icon(
                     Icons.check_circle_outline,
                     color: (pageIndex == 1) ? Colors.black : null,
                   ),
-                  label: "Accepted Requests"),
+                  label: "Accepted"),
               NavigationDestination(
                   icon: Icon(Icons.cancel_sharp,
                       color: (pageIndex == 2) ? Colors.black : null),
-                  label: "Expired Requests"),
+                  label: "Expired"),
             ]),
         appBar: AppBar(
           leading: DrawerButton(),
@@ -186,103 +187,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
         ),
         backgroundColor: PRIMARY_BACKGROUND_COLOR,
         body: [
-          Column(children: [
-            Expanded(
-              flex: 5,
-              child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                      // height: 380,
-                      decoration: BoxDecoration(
-                          color: PRIMARY_CARD_BACKGROUND_COLOR,
-                          borderRadius: BorderRadius.circular(30)),
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(children: [
-                          const Text("Incoming Requests",
-                              style: TextStyle(color: Colors.green)),
-                          Expanded(
-                              // width: double.infinity,
-                              // height: 290,
-                              child: ListView.builder(
-                                  itemCount: openRequests.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 1, 8, 1),
-                                        child: Card(
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5.0),
-                                                child: Row(children: [
-                                                  SizedBox(
-                                                    width: 220,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            openRequests[index]
-                                                                .datetime
-                                                                .substring(
-                                                                    0,
-                                                                    openRequests[
-                                                                            index]
-                                                                        .datetime
-                                                                        .lastIndexOf(
-                                                                            '.')),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .red[900])),
-                                                        Text(
-                                                            "Name: ${openRequests[index].name}"),
-                                                        Text(
-                                                            "Email: ${openRequests[index].email}"),
-                                                        Text(
-                                                            "Phone: ${openRequests[index].phone}"),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'requests')
-                                                            .doc(openRequests[
-                                                                    index]
-                                                                .email)
-                                                            .update({
-                                                          'status': 'accepted',
-                                                          'hospitalName': widget
-                                                              .hospital.name,
-                                                          'hospitalEmail':
-                                                              widget.hospital
-                                                                  .email,
-                                                          'hospitalPhone':
-                                                              widget.hospital
-                                                                  .phone
-                                                        });
-                                                        setState(() {
-                                                          openRequests
-                                                              .removeAt(index);
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.check)),
-                                                  IconButton(
-                                                      onPressed: () {},
-                                                      icon:
-                                                          const Icon(Icons.map))
-                                                ]))));
-                                  })),
-                        ]),
-                      ))),
-            )
-          ]),
+          IncomingRequestScreen(openRequests: openRequests, hospital: widget.hospital),
           AcceptedRequestScreen(acceptedRequests: acceptedRequests),
           ExpiredRequestScreen(expiredRequests: expiredRequests)
         ][pageIndex]);
