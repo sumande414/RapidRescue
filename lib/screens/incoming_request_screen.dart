@@ -108,7 +108,7 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen> {
                                                           .openRequests[index]
                                                           .lat,lng:widget
                                                           .openRequests[index]
-                                                          .lng,),
+                                                          .lng,hospital: widget.hospital,),
                                                       ));
                                                 },
                                                 icon: const Icon(Icons.map))

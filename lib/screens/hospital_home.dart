@@ -188,7 +188,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
         backgroundColor: PRIMARY_BACKGROUND_COLOR,
         body: [
           IncomingRequestScreen(openRequests: openRequests, hospital: widget.hospital),
-          AcceptedRequestScreen(acceptedRequests: acceptedRequests),
+          AcceptedRequestScreen(acceptedRequests: acceptedRequests, hospital: widget.hospital,),
           ExpiredRequestScreen(expiredRequests: expiredRequests)
         ][pageIndex]);
   }

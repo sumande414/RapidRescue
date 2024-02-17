@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:rapid_rescue/model/hospital.dart';
 import 'package:rapid_rescue/screens/map_screen.dart';
 
 class RequestCard extends StatelessWidget {
-  const RequestCard(
+  RequestCard(
       {super.key,
       required this.name,
       required this.email,
@@ -13,7 +14,8 @@ class RequestCard extends StatelessWidget {
       required this.datetime,
       this.isExpiredScreen,
       required this.lat,
-      required this.lng});
+      required this.lng,
+      this.hospital});
   final String name;
   final bool? isExpiredScreen;
   final String email;
@@ -21,6 +23,7 @@ class RequestCard extends StatelessWidget {
   final String datetime;
   final double lat;
   final double lng;
+  Hospital? hospital;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -58,8 +61,14 @@ class RequestCard extends StatelessWidget {
                 ? Container()
                 : IconButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MapScreen(lat: lat,lng:lng)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MapScreen(
+                                    lat: lat,
+                                    lng: lng,
+                                    hospital: hospital,
+                                  )));
                     },
                     icon: const Icon(Icons.map))
           ],

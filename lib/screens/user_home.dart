@@ -11,8 +11,8 @@ import '../model/request.dart';
 import '../model/user.dart';
 
 class UserHomePage extends StatefulWidget {
-   UserHomePage({super.key,required this.user});
-  AppUser user;
+  const UserHomePage({super.key,required this.user});
+  final AppUser user;
   @override
   State<UserHomePage> createState() => _UserHomePageState();
 }
