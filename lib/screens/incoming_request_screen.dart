@@ -90,7 +90,9 @@ class _IncomingRequestScreenState extends State<IncomingRequestScreen> {
                                                     'hospitalEmail':
                                                         widget.hospital.email,
                                                     'hospitalPhone':
-                                                        widget.hospital.phone
+                                                        widget.hospital.phone,
+                                                    'hospitalLat': widget.hospital.latitude,
+                                                    'hospitalLong' : widget.hospital.longitude
                                                   });
                                                   setState(() {
                                                     widget.openRequests

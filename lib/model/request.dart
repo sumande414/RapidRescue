@@ -11,6 +11,8 @@ class Request {
   String hospitalPhone;
   double lat;
   double lng;
+  double? hospitalLat;
+  double? hospitalLong;
   Request(
       {required this.email,
       required this.name,
@@ -21,7 +23,9 @@ class Request {
       required this.hospitalEmail,
       required this.hospitalPhone,
       required this.lat,
-      required this.lng});
+      required this.lng,
+      required this.hospitalLat,
+      required this.hospitalLong});
 
   factory Request.fromDb(DocumentSnapshot<Map<String, dynamic>> data) =>
       Request(
@@ -30,9 +34,11 @@ class Request {
           phone: data['phone'],
           datetime: data['datetime'],
           status: data['status'],
-          hospitalName:data['hospitalName'],
-          hospitalEmail:data['hospitalEmail'],
-          hospitalPhone:data['hospitalPhone'],
+          hospitalName: data['hospitalName'],
+          hospitalEmail: data['hospitalEmail'],
+          hospitalPhone: data['hospitalPhone'],
           lat: data['lattitude'],
-          lng: data['longitude']);
+          lng: data['longitude'],
+          hospitalLat: data['hospitalLat'],
+          hospitalLong: data['hospitalLong']);
 }

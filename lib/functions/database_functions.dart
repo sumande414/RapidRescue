@@ -75,6 +75,8 @@ addRequest(
     required String hospitalName,
     required String hospitalEmail,
     required String hospitalPhone,
+    required double? hospitalLat,
+    required double? hospitalLong
     }
     ) async {
   try {
@@ -92,6 +94,8 @@ addRequest(
       'hospitalName' : hospitalName,
       'hospitalEmail' : hospitalEmail,
       'hospitalPhone' : hospitalPhone,
+      'hospitalLat' : hospitalLat,
+      'hospitalLong' : hospitalLong
     });
   } catch (e) {
     Fluttertoast.showToast(msg: "Firestore Error: ${e.toString()}");
