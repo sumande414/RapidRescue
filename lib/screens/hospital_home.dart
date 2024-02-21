@@ -102,8 +102,7 @@ class _HospitalHomePageState extends State<HospitalHomePage> {
                   label: "Expired"),
             ]),
         appBar: AppBar(
-          leading: DrawerButton(),
-          title: Center(child: Text("Rapid Rescue", style: CARD_HEAD)),
+          title: Text("Rapid Rescue", style: CARD_HEAD),
           backgroundColor: Colors.transparent,
           actions: [
             PopupMenuButton(

@@ -104,6 +104,8 @@ class _UserHomePageState extends State<UserHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text("Rapid Rescue", style: CARD_HEAD),
@@ -211,18 +213,33 @@ class _UserHomePageState extends State<UserHomePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("Name: ${request!.name}"),
-                                      Text("Email: ${request!.email}"),
-                                      Text("Phone: ${request!.phone}"),
+                                      Text("User",style: TextStyle(fontSize: width/30, fontWeight: FontWeight.bold)),
+                                      Text(
+                                        "${request!.name}",
+                                        style: TextStyle(fontSize: width / 30),
+                                      ),
+                                      Text("${request!.email}",
+                                          style:
+                                              TextStyle(fontSize: width / 30)),
+                                      Text("${request!.phone}",
+                                          style:
+                                              TextStyle(fontSize: width / 30)),
                                     ],
                                   ),
                                   Spacer(),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text("Name: ${request!.hospitalName}"),
-                                      Text("Email: ${request!.hospitalEmail}"),
-                                      Text("Phone: ${request!.hospitalPhone}"),
+                                      Text("Hospital",style: TextStyle(fontSize: width/30,fontWeight: FontWeight.bold)),
+                                      Text("${request!.hospitalName}",
+                                          style:
+                                              TextStyle(fontSize: width / 30)),
+                                      Text("${request!.hospitalEmail}",
+                                          style:
+                                              TextStyle(fontSize: width / 30)),
+                                      Text("${request!.hospitalPhone}",
+                                          style:
+                                              TextStyle(fontSize: width / 30)),
                                     ],
                                   )
                                 ],
@@ -274,7 +291,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               ? Center(child: Text("No request found :)"))
                               : (request!.status == "open")
                                   ? const Center(
-                                      child: CircularProgressIndicator(color: Colors.green),
+                                      child: CircularProgressIndicator(
+                                          color: Colors.green),
                                     )
                                   : null,
                     ),

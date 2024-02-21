@@ -44,12 +44,11 @@ TextStyle HOSPITAL_SUB_HEADING = const TextStyle(
 
 TextStyle BOTTON_TEXT_STYLE = const TextStyle(
   color: Colors.white,
-  fontSize: 20,
+  fontSize: 18,
   fontWeight: FontWeight.bold
 );
 
 TextStyle REQUEST_TEXT_STYLE = const TextStyle(
-  color: Colors.green,
+  color: Colors.white,
   fontSize: 18,
-  fontWeight: FontWeight.bold
 );
